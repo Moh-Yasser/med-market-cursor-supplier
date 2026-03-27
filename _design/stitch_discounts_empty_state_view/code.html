@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="ar"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ملف المورد | MediLink Pro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Noto+Sans+Arabic:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-primary": "#b0c6ff",
+              "surface-container-highest": "#e0e3e5",
+              "on-background": "#191c1e",
+              "on-error": "#ffffff",
+              "secondary-fixed": "#cbe7f5",
+              "error": "#ba1a1a",
+              "on-secondary-container": "#4e6874",
+              "surface-tint": "#2b5bb5",
+              "surface-container-high": "#e6e8ea",
+              "outline-variant": "#c3c6d4",
+              "on-primary-container": "#a1bbff",
+              "inverse-surface": "#2d3133",
+              "error-container": "#ffdad6",
+              "tertiary": "#602100",
+              "surface-container-low": "#f2f4f6",
+              "on-tertiary-fixed-variant": "#7d2d00",
+              "on-tertiary-container": "#ffa781",
+              "on-tertiary": "#ffffff",
+              "on-secondary-fixed-variant": "#304a55",
+              "primary-fixed": "#d9e2ff",
+              "tertiary-fixed": "#ffdbcd",
+              "surface-bright": "#f7f9fb",
+              "on-primary": "#ffffff",
+              "secondary": "#48626e",
+              "on-primary-fixed-variant": "#00429c",
+              "inverse-on-surface": "#eff1f3",
+              "primary": "#003178",
+              "on-secondary-fixed": "#021f29",
+              "on-primary-fixed": "#001945",
+              "tertiary-container": "#853100",
+              "outline": "#737783",
+              "surface-dim": "#d8dadc",
+              "secondary-fixed-dim": "#afcbd8",
+              "on-surface-variant": "#434652",
+              "on-surface": "#191c1e",
+              "on-secondary": "#ffffff",
+              "primary-fixed-dim": "#b0c6ff",
+              "tertiary-fixed-dim": "#ffb596",
+              "surface-container": "#eceef0",
+              "on-tertiary-fixed": "#360f00",
+              "on-error-container": "#93000a",
+              "background": "#f7f9fb",
+              "surface-container-lowest": "#ffffff",
+              "secondary-container": "#cbe7f5",
+              "surface-variant": "#e0e3e5",
+              "surface": "#f7f9fb",
+              "primary-container": "#0d47a1"
+            },
+            fontFamily: {
+              "headline": ["Noto Sans Arabic", "Manrope"],
+              "body": ["Noto Sans Arabic", "Inter"],
+              "label": ["Noto Sans Arabic", "Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "3xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        font-family: 'Noto Sans Arabic', 'Inter', sans-serif;
+        background-color: #f7f9fb;
+      }
+      h1, h2, h3 {
+        font-family: 'Noto Sans Arabic', 'Manrope', sans-serif;
+      }
+      .rtl-flip {
+        transform: scaleX(-1);
+      }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- SideNavBar Component -->
+<aside class="h-screen w-64 fixed right-0 top-0 overflow-y-auto bg-slate-50 dark:bg-slate-900 flex flex-col p-4 border-l-0 z-50">
+<div class="mb-8 px-4">
+<h1 class="text-xl font-bold text-blue-900 dark:text-white">MediLink Pro</h1>
+<p class="text-xs font-medium text-blue-700/60 uppercase tracking-widest mt-1">مورد معتمد</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-slate-800/50 hover:text-blue-800 transition-all duration-200 ease-in-out active:scale-95 text-sm font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                لوحة التحكم
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-slate-800/50 hover:text-blue-800 transition-all duration-200 ease-in-out active:scale-95 text-sm font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+                المخزون
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-slate-800/50 hover:text-blue-800 transition-all duration-200 ease-in-out active:scale-95 text-sm font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+                الطلبات
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-slate-800/50 hover:text-blue-800 transition-all duration-200 ease-in-out active:scale-95 text-sm font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+                التحليلات
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-slate-800/50 hover:text-blue-800 transition-all duration-200 ease-in-out active:scale-95 text-sm font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined">medical_services</span>
+                الموردين
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-800 text-blue-700 dark:text-blue-300 rounded-xl shadow-sm transition-all duration-200 ease-in-out active:scale-95 text-sm font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+                الإعدادات
+            </a>
+</nav>
+<div class="mt-auto pt-4 space-y-1">
+<button class="w-full bg-primary bg-gradient-to-br from-primary to-primary-container text-white py-3 px-4 rounded-full font-bold shadow-lg shadow-primary/20 flex items-center justify-center gap-2 mb-6 hover:opacity-90 transition-all active:scale-95">
+<span class="material-symbols-outlined text-sm">add</span>
+                إدراج جديد
+            </button>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-slate-800/50 transition-all text-sm font-medium" href="#">
+<span class="material-symbols-outlined">help</span>
+                الدعم
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 transition-all text-sm font-medium" href="#">
+<span class="material-symbols-outlined">logout</span>
+                تسجيل الخروج
+            </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="mr-64 min-h-screen">
+<!-- TopAppBar Component -->
+<header class="sticky top-0 z-40 w-full bg-white/80 dark:bg-slate-950/80 backdrop-blur-md flex justify-between items-center h-16 px-8 shadow-sm shadow-blue-900/5">
+<div class="flex items-center gap-8">
+<span class="text-lg font-extrabold text-blue-900 dark:text-blue-200 font-headline">سوق Clinical Curator</span>
+<nav class="hidden md:flex gap-6 text-base tracking-normal">
+<a class="text-slate-500 hover:text-blue-600 transition-colors" href="#">المتجر</a>
+<a class="text-slate-500 hover:text-blue-600 transition-colors" href="#">المناقصات</a>
+<a class="text-slate-500 hover:text-blue-600 transition-colors" href="#">الرسائل</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 ml-4">
+<button class="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-colors">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</button>
+</div>
+<div class="flex items-center gap-3 pr-4 border-r border-slate-200">
+<div class="text-left hidden sm:block text-right">
+<p class="text-sm font-bold text-on-surface">د. جوليان ثورن</p>
+<p class="text-[10px] text-on-surface-variant font-medium uppercase tracking-tighter">مدير الموردين</p>
+</div>
+<img alt="Supplier Administrator Profile" class="w-10 h-10 rounded-full object-cover ring-2 ring-primary/10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJfcbBcNZLvwpQS7XA88w28FiTrogVd3rI9xGYKAaKQVp5rdmLTGPtYJ17AFH3-enbZTyfEMe6RiS_IBAKXkCNXwu40SeimvnmJU2IVc-qPjc8vhOVmG1k-PthKg3T4bo9jFLSRLDQroCdnMPiQ8n5tKK9gP9E1FOSdYz9nrg81f75X1EU-PIYBw8JCMVgzvH6cOycX968oS289WTgz-hQVpBH30JXJ2IY3pddBXN0EBbx6jnyvO--b5kT91-AQ-IsMwocRfcPS84"/>
+</div>
+</div>
+</header>
+<!-- Profile Content -->
+<div class="p-10 max-w-6xl mx-auto space-y-10">
+<!-- Breadcrumbs -->
+<nav class="flex text-sm text-on-surface-variant gap-2 font-medium">
+<a class="hover:text-primary transition-colors" href="#">الإعدادات</a>
+<span>/</span>
+<span class="text-primary">ملف المورد</span>
+</nav>
+<!-- Page Title Area -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="text-4xl font-extrabold font-headline tracking-tight text-primary">ملف المورد</h2>
+<p class="text-on-surface-variant mt-2 max-w-lg">إدارة تفاصيلك المهنية الشخصية ومعلومات الشركة المعتمدة للسوق الطبي.</p>
+</div>
+<div class="flex gap-3">
+<button class="bg-surface-container-high text-primary px-6 py-2.5 rounded-full font-bold text-sm hover:bg-surface-container-highest transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">download</span>
+                        تصدير البيانات
+                    </button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- User Information Card -->
+<section class="lg:col-span-1 bg-surface-container-lowest rounded-3xl p-8 shadow-[0px_12px_32px_rgba(25,28,30,0.04)] h-fit">
+<div class="flex justify-between items-start mb-8">
+<div class="w-12 h-12 bg-primary/5 text-primary rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl">person</span>
+</div>
+<button class="p-2 text-on-surface-variant hover:text-primary hover:bg-primary/5 rounded-xl transition-all">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</div>
+<h3 class="text-xl font-bold font-headline mb-6">معلومات المستخدم</h3>
+<div class="space-y-6">
+<div>
+<p class="text-[11px] font-semibold text-on-surface-variant uppercase tracking-widest mb-1">الاسم الكامل</p>
+<p class="text-lg font-medium text-on-surface">د. جوليان ثورن</p>
+</div>
+<div>
+<p class="text-[11px] font-semibold text-on-surface-variant uppercase tracking-widest mb-1">البريد الإلكتروني</p>
+<p class="font-medium text-on-surface">j.thorne@medilinkpro.com</p>
+</div>
+<div>
+<p class="text-[11px] font-semibold text-on-surface-variant uppercase tracking-widest mb-1">كلمة المرور</p>
+<div class="flex items-center gap-2">
+<p class="font-medium text-on-surface tracking-tighter">••••••••••••</p>
+<span class="material-symbols-outlined text-sm text-on-surface-variant/40">visibility_off</span>
+</div>
+</div>
+<div>
+<p class="text-[11px] font-semibold text-on-surface-variant uppercase tracking-widest mb-1">رقم الهاتف</p>
+<p class="font-medium text-on-surface" dir="ltr">+1 (555) 902-4412</p>
+</div>
+</div>
+<div class="mt-10 p-4 bg-surface-container-low rounded-2xl border border-outline-variant/10">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-xl" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<div>
+<p class="text-xs font-bold text-on-surface">حساب موثق</p>
+<p class="text-[10px] text-on-surface-variant">صلاحية المسؤول منذ أكتوبر 2023</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Company Information Card -->
+<section class="lg:col-span-2 bg-surface-container-lowest rounded-3xl shadow-[0px_12px_32px_rgba(25,28,30,0.04)] overflow-hidden">
+<div class="p-8 border-b border-surface-container">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 bg-gradient-to-br from-blue-900 to-blue-700 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-blue-900/20">
+<span class="material-symbols-outlined text-3xl">domain</span>
+</div>
+<div>
+<h3 class="text-2xl font-bold font-headline">معلومات الشركة</h3>
+<div class="flex items-center gap-2 mt-1">
+<span class="px-2.5 py-0.5 bg-on-primary-fixed text-on-primary text-[10px] font-bold rounded-full uppercase tracking-tighter">مورد طبي معتمد</span>
+<span class="px-2.5 py-0.5 bg-secondary-container text-on-secondary-container text-[10px] font-bold rounded-full uppercase tracking-tighter">نشط</span>
+</div>
+</div>
+</div>
+<button class="p-3 text-on-surface-variant hover:text-primary hover:bg-primary/5 rounded-2xl transition-all border border-outline-variant/20">
+<span class="material-symbols-outlined">edit_square</span>
+</button>
+</div>
+</div>
+<div class="p-8 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+<!-- Left Column (Now Right in RTL) -->
+<div class="space-y-8">
+<div>
+<p class="text-[11px] font-semibold text-on-surface-variant uppercase tracking-widest mb-1">اسم الشركة</p>
+<p class="text-xl font-bold text-on-surface">MediLink Pro Distribution</p>
+</div>
+<div>
+<p class="text-[11px] font-semibold text-on-surface-variant uppercase tracking-widest mb-1">نوع الكيان</p>
+<p class="font-medium text-on-surface flex items-center gap-2">
+                                    موزع رئيسي
+                                    <span class="material-symbols-outlined text-primary text-sm">info</span>
+</p>
+</div>
+<div>
+<p class="text-[11px] font-semibold text-on-surface-variant uppercase tracking-widest mb-1">جهة الاتصال</p>
+<div class="space-y-2 mt-2">
+<div class="flex items-center gap-3 text-sm">
+<span class="material-symbols-outlined text-on-surface-variant text-lg">mail</span>
+<span class="font-medium">corporate@medilink.pro</span>
+</div>
+<div class="flex items-center gap-3 text-sm" dir="ltr">
+<span class="material-symbols-outlined text-on-surface-variant text-lg rtl-flip">call</span>
+<span class="font-medium">+1 (800) 555-0199</span>
+</div>
+</div>
+</div>
+<div class="pt-4 border-t border-surface-container">
+<div class="grid grid-cols-2 gap-4">
+<div>
+<p class="text-[10px] font-semibold text-on-surface-variant uppercase tracking-widest mb-1">الرقم الضريبي</p>
+<p class="text-sm font-bold text-on-surface">TX-9902-1140</p>
+</div>
+<div>
+<p class="text-[10px] font-semibold text-on-surface-variant uppercase tracking-widest mb-1">رقم التسجيل</p>
+<p class="text-sm font-bold text-on-surface">REG-00445-B2</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column (Now Left in RTL) -->
+<div class="space-y-8 bg-surface-container-low/50 p-6 rounded-3xl">
+<div>
+<p class="text-[11px] font-semibold text-on-surface-variant uppercase tracking-widest mb-1">عنوان الشركة</p>
+<p class="text-sm font-medium text-on-surface leading-relaxed mt-2">
+                                    7800 ديسكفري بوليفارد، جناح 400<br/>
+                                    حي الابتكار
+                                </p>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<p class="text-[11px] font-semibold text-on-surface-variant uppercase tracking-widest mb-1">مدينة</p>
+<p class="text-sm font-medium text-on-surface">بوسطن</p>
+</div>
+<div>
+<p class="text-[11px] font-semibold text-on-surface-variant uppercase tracking-widest mb-1">منطقة</p>
+<p class="text-sm font-medium text-on-surface">ماساتشوستس</p>
+</div>
+</div>
+<div class="pt-2">
+<a class="inline-flex items-center gap-2 text-primary text-sm font-bold hover:gap-3 transition-all group" href="#">
+<span class="material-symbols-outlined">map</span>
+                                    عرض على الخريطة
+                                    <span class="material-symbols-outlined text-sm group-hover:-translate-x-1 transition-transform rtl-flip">arrow_forward</span>
+</a>
+<div class="mt-4 rounded-2xl overflow-hidden grayscale contrast-125 opacity-70 hover:opacity-100 transition-opacity cursor-pointer">
+<img class="w-full h-24 object-cover" data-alt="رؤية خريطة مصممة لتخطيط شوارع حضري حديث بخطوط نظيفة ونغمات زرقاء ناعمة" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSwjgNM6xVI2ZEizLCB2zowCKG8Nh_CDEwm7A5xHBdrpB1j21kKTx0rhCfJdBnBzsmUeJ1657Xq7dBvIgkrZvIvtNk5Dvw4nyRpqc4fO-GvvBCfjRZm6stKRKiO9svXAju4qsWrxqzuvVcrt779MEoK3h9IPUCUrwml6e_5JcpmuniCNMW6aus-j-BMHYk8I5CF1ovNfNBWElYNSuwitk_5457G7sGS0bl13BlQhM-LL76o8E2cHYo9VMSz4J9FPgxZON2jOYnIFU"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Action -->
+<div class="px-8 py-6 bg-surface-container-low flex justify-between items-center">
+<p class="text-[11px] text-on-surface-variant font-medium italic">تم التحقق من البيانات آخر مرة في 14 نوفمبر 2023</p>
+<div class="flex items-center gap-2 text-primary font-bold text-xs">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">shield</span>
+                            معالجة بيانات متوافقة مع HIPAA
+                        </div>
+</div>
+</section>
+</div>
+<!-- Profile Completion Sidebar -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<div class="md:col-span-3"></div>
+<div class="space-y-4">
+<div class="bg-surface-container-high/40 p-6 rounded-2xl">
+<h4 class="text-sm font-bold mb-3">اكتمال الملف الشخصي</h4>
+<div class="w-full bg-surface-container-highest rounded-full h-1.5 mb-2">
+<div class="bg-primary h-1.5 rounded-full w-[85%]"></div>
+</div>
+<p class="text-[10px] text-on-surface-variant">مكتمل بنسبة 85%. أضف تفاصيل البنك لعمليات دفع أسرع.</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>
