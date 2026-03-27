@@ -2,6 +2,7 @@ import { OfferForm } from "@/components/supplier-offers/offers-form/offer-form"
 import { ArrowLeft, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { Suspense } from "react"
 
 export default function CreateOfferPage() {
   return (
@@ -30,9 +31,9 @@ export default function CreateOfferPage() {
         </Link>
       </Button>
     </div>
-    <OfferForm
-      mode="create"
-    />
+    <Suspense fallback={<div className="text-sm text-muted-foreground">جاري تحميل النموذج...</div>}>
+      <OfferForm mode="create" />
+    </Suspense>
         </div>
       </div>
     </main>

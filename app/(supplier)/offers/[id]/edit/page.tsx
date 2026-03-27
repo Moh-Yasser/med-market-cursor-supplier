@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { getOfferById } from "@/lib/offers/offers.server"
 import type { OfferFormValues } from "@/components/supplier-offers/offers-form/offer-schema"
+import { Suspense } from "react"
 
 type Props = {
   params: Promise<{ id: string }>
@@ -50,11 +51,13 @@ const offer=dataFetched.data;
       </Link>
     </Button>
   </div>
-    <OfferForm
-      mode="edit"
-      offerId={offer.id}
-      initialData={initialData}
-    />
+    <Suspense fallback={<div className="text-sm text-muted-foreground">جاري تحميل النموذج...</div>}>
+      <OfferForm
+        mode="edit"
+        offerId={offer.id}
+        initialData={initialData}
+      />
+    </Suspense>
       </div>
       </div>
     </main>
