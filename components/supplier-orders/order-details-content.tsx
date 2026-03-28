@@ -55,7 +55,7 @@ export function OrderDetailsContent({ orderId }: { orderId: string }) {
   if (isError || !order) {
     return (
       <div className="space-y-6">
-          <Link href="/orders/history" >
+          <Link href="/orders" >
         <button className="flex items-center gap-2 cursor-pointer transition-all  hover:translate-y-[-2px] ">
           <ArrowRight className="h-4 w-4" /> العودة إلى السجل
         </button>
@@ -69,7 +69,7 @@ export function OrderDetailsContent({ orderId }: { orderId: string }) {
 
   return (
     <div className="space-y-6">
-      <Link href="/orders/history" >
+      <Link href="/orders" >
         <button className="flex items-center gap-2 cursor-pointer transition-all  hover:translate-y-[-2px] ">
           <ArrowRight className="h-4 w-4" /> العودة إلى السجل
         </button>
