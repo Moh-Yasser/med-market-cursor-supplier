@@ -20,7 +20,8 @@ export function useProductsFiltersFromURL(): ProductsFilters {
       search: searchParams.get("search") || undefined,
       category_id: searchParams.get("category_id") || undefined,
       manufacturer_id: searchParams.get("manufacturer_id") || undefined,
-      is_active:searchParams.get("manufacturer_id") || undefined,
+      is_active: searchParams.get("manufacturer_id") || undefined,
+      paginate: searchParams.get("paginate") === "true",
       page: parseInt(searchParams.get("page") || "1", 10),
       per_page: parseInt(searchParams.get("per_page") || "15", 10),
     };

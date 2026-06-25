@@ -1,8 +1,12 @@
 import { OffersContent } from "@/components/supplier-offers/offers-content"
+import { Suspense } from "react"
 
 
 export default function OffersPage() {
   return (
-  <OffersContent/>
+     <Suspense fallback={<DriversContentSkeleton />}>
+       <OffersContent/>
+    </Suspense>
+  
   )
 }
