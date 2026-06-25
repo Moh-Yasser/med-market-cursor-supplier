@@ -37,6 +37,7 @@ export interface ProductsFilters {
     is_active?:string  ;
     page?: number | undefined;
     per_page?: number | undefined;
+    paginate:boolean,
   }
 
 
@@ -45,6 +46,7 @@ export interface SuppliersFilters {
     search?:string
     category_id?: string;
     manufacturer_id?: string;
+    paginate?:boolean,
     page?: number | undefined;
     per_page?: number | undefined;
 }
