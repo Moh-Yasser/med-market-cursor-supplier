@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import type { OfferFormValues } from "./offer-schema"
-import type { OfferType } from "@/types/offer"
+import type { OfferType } from "@/types/offers"
 
 interface OfferDiscountFieldsProps {
   form: UseFormReturn<OfferFormValues>

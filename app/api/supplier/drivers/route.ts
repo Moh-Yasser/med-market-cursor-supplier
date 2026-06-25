@@ -7,6 +7,7 @@ export async function GET(req: NextRequest) {
   const denied = await requireAuth(req)
   if (denied) return denied
 
+ 
   try {
     const qs = req.nextUrl.searchParams.toString()
     const data = await phpFetch(`/drivers${qs ? `?${qs}` : ""}`)

@@ -1,87 +1,74 @@
-"use client"
+
+'use client'
 
 import { useQuery } from "@tanstack/react-query"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Package, ShoppingCart, AlertTriangle, Users, Loader2 } from "lucide-react"
-import { productsKeys } from "@/lib/products/products-keys"
-import { fetchSupplierProducts } from "@/lib/products/products.client"
-import { ordersKeys } from "@/lib/orders/orders-keys"
-import { fetchOrders } from "@/lib/orders/orders.client"
-import { driversKeys } from "@/lib/drivers/drivers-keys"
-import { fetchDrivers } from "@/lib/drivers/drivers.client"
+import { AlertCircle, RefreshCw } from "lucide-react"
+
+import { DashboardKpiCards } from "./dashboard-kpi-cards"
+import { SalesOverviewChart } from "./sales-overview-chart"
+import { TopBuyersList } from "./top-buyers-list"
 import { TopProductsTable } from "./top-products-table"
+import { getDashboardData } from "@/lib/dashboard/dashboard.client"
+import { DASHBOARD_KEYS } from "@/lib/dashboard/dashboard-keys"
+import type { DashboardApiResponse, DashboardData } from "@/types/dashboard"
+
+function ErrorCard({ onRetry }: { onRetry: () => void }) {
+  return (
+    <div className="rounded-xl border border-red-200 bg-red-50 p-8 text-center">
+      <AlertCircle className="mx-auto mb-3 h-9 w-9 text-red-500" />
+      <p className="mb-1 text-base font-bold text-red-700">تعذّر تحميل البيانات</p>
+      <p className="mb-5 text-sm text-[#43474e]">
+        تحقق من اتصالك بالإنترنت ثم حاول مجدداً.
+      </p>
+      <button
+        onClick={onRetry}
+        className="inline-flex items-center gap-2 rounded-lg bg-red-700 px-5 py-2 text-sm font-bold text-white transition hover:bg-red-800"
+      >
+        <RefreshCw className="h-4 w-4" />
+        إعادة المحاولة
+      </button>
+    </div>
+  )
+}
 
 export function DashboardContent() {
-  const { data: productsData, isLoading: prodLoading } = useQuery({
-    queryKey: productsKeys.list({ per_page: 1 }),
-    queryFn: () => fetchSupplierProducts({ per_page: 1 }),
+  const { data, isLoading, isError, refetch } = useQuery<DashboardApiResponse>({
+    queryKey: DASHBOARD_KEYS.all,
+    queryFn: getDashboardData,
   })
 
-  const { data: ordersData, isLoading: ordLoading } = useQuery({
-    queryKey: ordersKeys.list({ per_page: 1 }),
-    queryFn: () => fetchOrders({ per_page: 1 }),
-  })
-
-  const { data: driversData, isLoading: drvLoading } = useQuery({
-    queryKey: driversKeys.list({ per_page: 1 }),
-    queryFn: () => fetchDrivers({ per_page: 1 }),
-  })
-
-  const loading = prodLoading || ordLoading || drvLoading
-
-  const stats = [
-    {
-      title: "إجمالي المنتجات",
-      value: productsData?.pagination?.total ?? "—",
-      icon: Package,
-    },
-    {
-      title: "إجمالي الطلبات",
-      value: ordersData?.pagination?.total ?? "—",
-      icon: ShoppingCart,
-    },
-    {
-      title: "الطلبات المعلقة",
-      value: "—",
-      icon: AlertTriangle,
-    },
-    {
-      title: "السائقين النشطين",
-      value: driversData?.pagination?.total ?? "—",
-      icon: Users,
-    },
-  ]
+  const {
+    kpis        = [],
+    salesSeries = [],
+    topProducts = [],
+    topBuyers   = [],
+  } = (data?.data ?? {}) as Partial<DashboardData>
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">لوحة التحكم</h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          نظرة عامة على أداء متجرك
+    <div dir="rtl" className="space-y-6">
+      <header className="space-y-2">
+        <h1 className="text-2xl font-bold tracking-tight text-[#002045]">
+          نظرة عامة على التشغيل
+        </h1>
+        <p className="text-sm text-[#43474e]">
+          مقاييس سلسلة التوريد والتنفيذ في الوقت الفعلي.
         </p>
-      </div>
+      </header>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => (
-          <Card key={stat.title}>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                {stat.title}
-              </CardTitle>
-              <stat.icon className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              {loading ? (
-                <div className="h-8 w-16 animate-pulse rounded bg-muted" />
-              ) : (
-                <div className="text-2xl font-bold">{stat.value}</div>
-              )}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      {isError ? (
+        <ErrorCard onRetry={refetch} />
+      ) : (
+        <>
+          <DashboardKpiCards kpis={kpis} isLoading={isLoading} />
 
-      <TopProductsTable />
+          <SalesOverviewChart data={salesSeries} isLoading={isLoading} />
+
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <TopProductsTable products={topProducts} isLoading={isLoading} />
+            <TopBuyersList buyers={topBuyers} isLoading={isLoading} />
+          </div>
+        </>
+      )}
     </div>
   )
 }

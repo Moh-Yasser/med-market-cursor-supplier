@@ -1,19 +1,17 @@
 "use client"
 
-import { useState, useCallback, useMemo } from "react"
-import { useSearchParams, useRouter, usePathname } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Plus, Search } from "lucide-react"
+import {  useMemo } from "react"
+import { useSearchParams } from "next/navigation"
+import { Plus } from "lucide-react"
 import { DataTable } from "@/components/table/data-table"
-import { ProductAddDialog } from "./product-add-dialog"
-import { ProductEditDialog } from "./product-edit-dialog"
-import { createProductsColumns } from "./products-columns"
-import { productsKeys } from "@/lib/products/products-keys"
-import { fetchSupplierProducts } from "@/lib/products/products.client"
+import {  ProductsColumns } from "./products-columns"
+import { PRODUCTS_KEYS } from "@/lib/products/products-keys"
+import { fetchMyProducts } from "@/lib/products/products.client"
 import type { Product } from "@/types/products"
 import { ProductSearch } from "./products-search"
 import { ProductsFilters } from "@/types/filters"
+import Link from "next/link"
+import { Button } from "../ui/button"
 export function useProductsFiltersFromURL(): ProductsFilters {
   const searchParams = useSearchParams();
 
@@ -32,19 +30,11 @@ export function ProductsContent() {
   
   const filters = useProductsFiltersFromURL();
 
-  const queryKey = useMemo(() => productsKeys.list(filters), [filters]);
-  const queryFn = useMemo(() => () => fetchSupplierProducts(filters), [filters]);
+  const queryKey = useMemo(() => PRODUCTS_KEYS.list(filters), [filters]);
+  const queryFn = useMemo(() => () => fetchMyProducts(filters), [filters]);
 
   
-  const [showAdd, setShowAdd] = useState(false)
-  const [editProduct, setEditProduct] = useState<Product | null>(null)
-
-  
-
-  const columns = useMemo(
-    () => createProductsColumns((product: Product) => setEditProduct(product)),
-    [],
-  )
+  const columns = ProductsColumns;
 
   
   return (
@@ -56,9 +46,11 @@ export function ProductsContent() {
             إضافة وتعديل وإدارة المنتجات الطبية
           </p>
         </div>
-        <Button onClick={() => setShowAdd(true)} className="gap-2">
+        <Button>
+        <Link href="/products/add" className="gap-2 flex items-center justify-center ">
           <Plus className="h-4 w-4" />
           إضافة منتج
+        </Link>
         </Button>
       </div>
 
@@ -73,8 +65,7 @@ export function ProductsContent() {
         />
       </div>
 
-      <ProductAddDialog open={showAdd} onOpenChange={setShowAdd} />
-      <ProductEditDialog product={editProduct} onClose={() => setEditProduct(null)} />
+    
     </div>
   )
 }

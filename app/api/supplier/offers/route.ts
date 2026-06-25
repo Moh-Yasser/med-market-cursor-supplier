@@ -4,40 +4,13 @@ import { requireAuth, requireSupplierCompanyId, safeErrorResponse } from "@/lib/
 import { z } from "zod"
 import { createQueryString } from "@/lib/api/queryString"
 
-const filtersSchema = z.object({
-  offer_type: z.string().optional(),
-  is_active: z.string().optional(),
-  page: z.coerce.number().int().positive().optional(),
-  per_page: z.coerce.number().int().positive().optional(),
-})
+
 
 export async function GET(req: NextRequest) {
-  const denied = await requireAuth(req)
-  if (denied) return denied
-
-  const supplier = await requireSupplierCompanyId(req)
-  if (!supplier.ok) return supplier.response
-
   try {
-    const parsedFilters = filtersSchema.safeParse({
-      offer_type: req.nextUrl.searchParams.get("offer_type") ?? undefined,
-      is_active: req.nextUrl.searchParams.get("is_active") ?? undefined,
-      page: req.nextUrl.searchParams.get("page") ?? undefined,
-      per_page: req.nextUrl.searchParams.get("per_page") ?? undefined,
-    })
-
-    if (!parsedFilters.success) {
-      return NextResponse.json(
-        { success: false, error: "Invalid query params", details: parsedFilters.error.flatten() },
-        { status: 422 },
-      )
-    }
-
-    const qs = createQueryString({
-      ...parsedFilters.data,
-      supplier_company_id: supplier.companyId,
-    })
-    const data = await phpFetch(`/offers${qs ? `?${qs}` : ""}`)
+    const companyId = await requireSupplierCompanyId(req)
+    const qs = req.nextUrl.searchParams.toString()
+    const data = await phpFetch(`/offers?supplier_company_id=${companyId}&${qs}`)
     return NextResponse.json(data)
   } catch (err) {
     return safeErrorResponse(err)

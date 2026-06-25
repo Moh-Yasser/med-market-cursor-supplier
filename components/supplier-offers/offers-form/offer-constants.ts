@@ -1,4 +1,4 @@
-import type { OfferType } from "@/types/offer"
+import type { OfferType } from "@/types/offers"
 
 export const OFFER_TYPE_LABELS: Record<OfferType, string> = {
   percentage_discount: "خصم بنسبة مئوية",

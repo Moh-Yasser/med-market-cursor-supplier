@@ -3,7 +3,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import type { Column } from "@/components/table/data-table"
 import type { Product } from "@/types/products"
 import ProductPrice, { PriceCode } from "@/components/product-price"
-import { OfferType } from "@/types/offer"
+import { OfferType } from "@/types/offers"
 import { BundleQuantity } from "./bundle-quantity"
 
 

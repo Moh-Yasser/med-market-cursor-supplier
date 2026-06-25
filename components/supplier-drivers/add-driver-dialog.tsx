@@ -1,79 +1,266 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import * as React from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Eye,
+  EyeOff,
+  Lock,
+  Mail,
+  Phone,
+  Sparkles,
+  User,
+  UserPlus,
+} from "lucide-react";
+
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
-import { driversKeys } from "@/lib/drivers/drivers-keys"
-import { createDriver } from "@/lib/drivers/drivers.client"
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
-type Props = {
-  open: boolean
-  onOpenChange: (open: boolean) => void
+import {
+  driverDefaultValues,
+  DriverFormValues,
+  DriverSchema,
+} from "./driver-schema";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { DRIVERS_KEYS } from "@/lib/drivers/drivers-keys";
+import { createDriver } from "@/lib/drivers/drivers.client";
+
+interface AddDriverDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-const emptyForm = { name: "", email: "", password: "" }
+export function AddDriverDialog({ open, onOpenChange }: AddDriverDialogProps) {
+  const [showPassword, setShowPassword] = React.useState(false);
 
-export function AddDriverDialog({ open, onOpenChange }: Props) {
-  const queryClient = useQueryClient()
-  const [form, setForm] = useState(emptyForm)
+  const form = useForm<DriverFormValues>({
+    resolver: zodResolver(DriverSchema),
+    defaultValues: driverDefaultValues,
+  });
+
+  const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: createDriver,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: driversKeys.all })
-      onOpenChange(false)
-      setForm(emptyForm)
+      queryClient.invalidateQueries({ queryKey: DRIVERS_KEYS.all });
+      onOpenChange?.(false);
+      form.reset();
     },
-  })
-
-  const set = (key: string, value: string) => setForm((prev) => ({ ...prev, [key]: value }))
+  });
 
   const handleSubmit = () => {
-    if (!form.name || !form.email || !form.password) return
-    mutation.mutate({ name: form.name, email: form.email, password: form.password })
-  }
+    mutation.mutate(form.getValues());
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle>إضافة سائق جديد</DialogTitle>
-          <DialogDescription>أدخل بيانات السائق أدناه.</DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="driverName">الاسم الكامل</Label>
-            <Input id="driverName" placeholder="مثال: أحمد محمد" value={form.name} onChange={(e) => set("name", e.target.value)} />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="driverEmail">البريد الإلكتروني</Label>
-            <Input id="driverEmail" type="email" placeholder="driver@company.com" value={form.email} onChange={(e) => set("email", e.target.value)} />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="driverPassword">كلمة المرور</Label>
-            <Input id="driverPassword" type="password" placeholder="8 أحرف على الأقل" value={form.password} onChange={(e) => set("password", e.target.value)} />
-          </div>
-          {mutation.isError && (
-            <p className="text-sm text-destructive">فشل في إنشاء السائق. يرجى المحاولة مرة أخرى.</p>
-          )}
+      <DialogContent
+        dir="rtl"
+        showCloseButton={false}
+        className="flex max-h-[92vh] flex-col overflow-hidden p-0 sm:max-w-md"
+      >
+        <div className="relative shrink-0 bg-primary px-6 pt-6 pb-12 text-primary-foreground">
+          <h2 className="mt-2 font-heading text-2xl font-bold">
+            إضافة سائق جديد
+          </h2>
+          <p className="mt-1 text-sm text-primary-foreground/80 text-pretty">
+            أدخل بيانات السائق لإضافته إلى فريق التوصيل.
+          </p>
+
+         
+          <button
+            type="button"
+            className="absolute -bottom-7 left-6 flex size-14 items-center justify-center rounded-full bg-accent-foreground text-primary-foreground ring-4 ring-popover"
+            aria-label="رفع صورة السائق"
+          >
+            <User className="size-6" aria-hidden="true" />
+          </button>
         </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={mutation.isPending}>إلغاء</Button>
-          <Button onClick={handleSubmit} disabled={mutation.isPending || !form.name || !form.email || !form.password}>
-            {mutation.isPending ? "جاري الإضافة..." : "إضافة السائق"}
-          </Button>
-        </DialogFooter>
+
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="grid gap-5 overflow-y-auto px-6 pt-10 pb-6"
+          >
+            {/* Full name */}
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>الاسم الكامل</FormLabel>
+                  <FormControl>
+                    <InputWithIcon
+                      icon={<User className="size-4" aria-hidden="true" />}
+                      placeholder="مثال: أحمد العمري"
+                      autoComplete="name"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Email */}
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>البريد الإلكتروني</FormLabel>
+                  <FormControl>
+                    <InputWithIcon
+                      icon={<Mail className="size-4" aria-hidden="true" />}
+                      type="email"
+                      dir="ltr"
+                      placeholder="driver@example.com"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Phone */}
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>رقم الهاتف</FormLabel>
+                  <FormControl>
+                    <InputWithIcon
+                      icon={<Phone className="size-4" aria-hidden="true" />}
+                      type="tel"
+                      dir="ltr"
+                      placeholder="+963 9X XXX XXXX"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Password */}
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>كلمة المرور</FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-muted-foreground">
+                        <Lock className="size-4" aria-hidden="true" />
+                      </span>
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="••••••••"
+                        className="h-11 pr-10 pl-10"
+                        {...field}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((v) => !v)}
+                        className="absolute inset-y-0 left-3 flex items-center text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none"
+                        aria-label={
+                          showPassword
+                            ? "إخفاء كلمة المرور"
+                            : "إظهار كلمة المرور"
+                        }
+                      >
+                        {showPassword ? (
+                          <EyeOff className="size-4" aria-hidden="true" />
+                        ) : (
+                          <Eye className="size-4" aria-hidden="true" />
+                        )}
+                      </button>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Shift times */}
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="workStartTime"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>بدء الوردية</FormLabel>
+                    <FormControl>
+                      <Input type="time" className="h-11" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="workEndTime"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>نهاية الوردية</FormLabel>
+                    <FormControl>
+                      <Input type="time" className="h-11" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Footer */}
+            <div className="mt-2 flex items-center gap-3">
+              <Button type="submit" className="h-11 flex-1 gap-2">
+                <UserPlus className="size-4" aria-hidden="true" />
+                إضافة السائق
+              </Button>
+              <DialogClose>
+                <Button type="button" variant="outline" className="h-11 px-6">
+                  إلغاء
+                </Button>
+              </DialogClose>
+            </div>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
-  )
+  );
+}
+
+interface InputWithIconProps extends React.ComponentProps<typeof Input> {
+  icon: React.ReactNode;
+}
+
+function InputWithIcon({ icon, className, ...props }: InputWithIconProps) {
+  return (
+    <div className="relative">
+      <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-muted-foreground">
+        {icon}
+      </span>
+      <Input className={cn("h-11 pr-10", className)} {...props} />
+    </div>
+  );
 }

@@ -4,8 +4,28 @@ import { requireAuth, validateId, safeErrorResponse } from "@/lib/api/auth-guard
 
 type Ctx = { params: Promise<{ id: string }> }
 
-export async function PUT(req: NextRequest, ctx: Ctx) {
+export async function GET(req: NextRequest, ctx: Ctx) {
+  
   const denied = await requireAuth(req)
+  if (denied) return denied
+  const { id } = await ctx.params
+  const invalid = validateId(id)
+  if (invalid) return invalid
+  
+  try {
+    const data = await phpFetch(`/products/${id}`, {
+      method: "GET",
+    })
+    return NextResponse.json(data)
+  } catch (err) {
+    return safeErrorResponse(err)
+  }
+}
+
+export async function PUT(req: NextRequest, ctx: Ctx) {
+
+  const denied = await requireAuth(req)
+
   if (denied) return denied
 
   const { id } = await ctx.params

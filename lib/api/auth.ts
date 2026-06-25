@@ -2,8 +2,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import type { LoginActionResult, LoginApiResponse, ApiErrorResponse } from "@/types/auth";
-
+import type { LoginActionResult, LoginApiResponse, ApiErrorResponse, MeApiResponse } from "@/types/auth";
 const PHP_API_BASE = process.env.PHP_API_BASE!;
 
 export async function loginAction(
@@ -16,7 +15,8 @@ export async function loginAction(
   if (!email || !password) {
     return { success: false, error: "Email and password are required" };
   }
-
+  
+  
   try {
     const phpRes = await fetch(`${PHP_API_BASE}/auth/login`, {
       method: "POST",
@@ -35,7 +35,6 @@ export async function loginAction(
 
     const loginData = data as LoginApiResponse;
 
-    // Set the access token cookie
     const cookieStore = await cookies();
     cookieStore.set("access_token", loginData.data.token, {
       httpOnly: true,
@@ -86,4 +85,24 @@ export async function loginAndRedirect(formData: FormData) {
   }
 
   return result;
+}
+
+
+export async function getMe(): Promise<MeApiResponse> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("access_token")?.value;
+
+  if (!token) {
+    throw new Error("No access token"); // ✅ React Query catches this as an error state
+  }
+
+  const res = await fetch(`${PHP_API_BASE}/auth/me`, {
+    headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch user");
+  }
+  return res.json();
 }

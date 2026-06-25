@@ -18,6 +18,21 @@ export const createProductSchema = z.object({
     .min(3, "رمز المنتج يجب أن يكون 3 أحرف على الأقل")
     .max(100, "رمز المنتج طويل جدًا"),
 
+  wholesale_price: z.coerce
+    .number({
+      invalid_type_error: "سعر الجملة يجب أن يكون رقمًا صالحًا",
+    })
+    .positive("سعر الجملة يجب أن يكون أكبر من صفر")
+    .nullable(),
+
+  wholesale_min_qty: z.coerce
+    .number({
+      invalid_type_error: "الحد الأدنى للكمية يجب أن يكون رقمًا صالحًا",
+    })
+    .int("يجب أن تكون الكمية عددًا صحيحًا")
+    .positive("يجب أن تكون الكمية أكبر من صفر")
+    .nullable(),
+
   pharmacist_price: z.coerce
     .number({
       invalid_type_error: "سعر الصيدلي يجب أن يكون رقمًا صالحًا",
@@ -28,8 +43,8 @@ export const createProductSchema = z.object({
     .number({
       invalid_type_error: "سعر العميل يجب أن يكون رقمًا صالحًا",
     })
-    .positive("سعر العميل يجب أن يكون أكبر من صفر"),
-
+    .positive("سعر العميل يجب أن يكون أكبر من صفر")
+    .nullable(),
   stock_quantity: z.coerce
     .number({
       invalid_type_error: "كمية المخزون يجب أن تكون رقمًا صحيحًا",

@@ -1,4 +1,4 @@
-import { ProductOffer } from "@/types/offer"
+import { ProductOffer } from "@/types/offers"
 import { Separator } from "../ui/separator"
 import { Switch } from "../ui/switch"
 import { Label } from "../ui/label"

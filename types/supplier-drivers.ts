@@ -1,25 +1,41 @@
-import type { ApiResponse } from "./api-response"
+import type { ApiResponse } from "./api-response";
 
-export interface DriverUser {
-  id: number
-  name: string
-  email: string
-  companyId?: number
-  createdAt?: string
-  updatedAt?: string
-}
+import { Company } from "./company";
 
-export type DriversApiResponse = ApiResponse<DriverUser>
+export type DriverStatus = "available" | "On delivery" | "Off";
 
-export interface SupplierDriversFilters {
-  page?: number
-  per_page?: number
+export type Driver = {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  role: "driver";
+  company: Company;
+  workStartTime: Date;
+  workEndTime: Date;
+  employmentStartDate: Date;
+  employmentEndDate: Date;
+  driverStatus: DriverStatus;
+  deliveredOrderCount: number;
+  totalOrderCount: number;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+
+
+export type DriversApiResponse = ApiResponse<Driver>;
+
+export interface DriversFilters {
+  status?: DriverStatus | "all";
+  page?: number;
+  per_page?: number;
 }
 
 export interface CreateDriverPayload {
-  name: string
-  email: string
-  password: string
+  name: string;
+  email: string;
+  password: string;
 }
 
 export interface DriverOrdersFilters {

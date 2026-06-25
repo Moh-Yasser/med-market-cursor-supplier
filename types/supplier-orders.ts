@@ -1,4 +1,5 @@
 import type { Order, OrderStatus } from "./orders_cart"
+import { Driver } from "./supplier-drivers"
 
 export interface SupplierOrdersFilters {
   status?: OrderStatus | "all"
@@ -17,14 +18,7 @@ export interface OrderDetailResponse {
   };
 } 
 
-export interface Driver {
-  id: number
-  name: string
-  email: string
-  companyId?: number
-  createdAt?: string
-  updatedAt?: string
-}
+
 
 export interface StatusLog {
   id: number

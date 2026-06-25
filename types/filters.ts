@@ -40,5 +40,12 @@ export interface ProductsFilters {
   }
 
 
-
+export interface SuppliersFilters {
+    id?: string;
+    search?:string
+    category_id?: string;
+    manufacturer_id?: string;
+    page?: number | undefined;
+    per_page?: number | undefined;
+}
   

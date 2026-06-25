@@ -20,13 +20,12 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Driver } from "@/types/supplier-orders";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { driversKeys } from "@/lib/drivers/drivers-keys";
+import { DRIVERS_KEYS } from "@/lib/drivers/drivers-keys";
 import { fetchDrivers } from "@/lib/drivers/drivers.client";
-import { DriversApiResponse } from "@/types/supplier-drivers";
+import { Driver, DriversApiResponse } from "@/types/supplier-drivers";
 import { assignDriver, cancelOrder } from "@/lib/orders/orders.client";
-import { ordersKeys } from "@/lib/orders/orders-keys";
+import { ORDERS_KEYS } from "@/lib/orders/orders-keys";
 
 interface AcceptOrderDialogProps {
     open: boolean;
@@ -46,21 +45,21 @@ export default function AcceptOrderDialog({ open, setOpen, orderId, currentDrive
     }, [open, currentDriverId]);
 
     const { data, isLoading } = useQuery<DriversApiResponse>({
-        queryKey: driversKeys.lists(),
+        queryKey: DRIVERS_KEYS.lists(),
         queryFn: () => fetchDrivers()
     })
     const mutation = useMutation({
         mutationFn: ({ orderId, driverId }: { orderId: number; driverId: number }) =>
             assignDriver(orderId, driverId),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ordersKeys.all });
+            queryClient.invalidateQueries({ queryKey: ORDERS_KEYS.all });
             setOpen(false);
         },
     });
     const cancelMutation = useMutation({
         mutationFn: (id: number) => cancelOrder(id, "Cancelled by supplier"),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ordersKeys.all });
+            queryClient.invalidateQueries({ queryKey: ORDERS_KEYS.all });
             setOpen(false);
         },
     });

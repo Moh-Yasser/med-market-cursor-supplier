@@ -5,22 +5,22 @@ import { Button } from "../ui/button"
 import { Product } from "@/types/products"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { deleteProduct } from "@/lib/products/products.client"
-import { productsKeys } from "@/lib/products/products-keys"
+import { PRODUCTS_KEYS } from "@/lib/products/products-keys"
+import Link from "next/link"
 
 type Props = {
-  product: Product
-  onEdit: () => void
+  product: Product 
 }
 
-export function ProductsActions({ product, onEdit }: Props) {
+export function ProductsActions({ product }: Props) {
   const queryClient = useQueryClient()
 
   const deleteMutation = useMutation({
     mutationFn: deleteProduct,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: productsKeys.all }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: PRODUCTS_KEYS.all }),
   })
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: number ) => {
     deleteMutation.mutate(id)
   }
 
@@ -30,9 +30,11 @@ export function ProductsActions({ product, onEdit }: Props) {
         variant="ghost"
         size="icon"
         className="h-8 w-8 text-primary hover:text-primary hover:bg-primary/10"
-        onClick={onEdit}
       >
-        <Edit2 className="h-4 w-4" />
+        <Link href={`/products/${product.id}/edit`}>
+          <Edit2 className="h-4 w-4" />
+        </Link>
+
       </Button>
       <Button
         variant="ghost"

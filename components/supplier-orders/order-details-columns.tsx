@@ -32,7 +32,7 @@ export function createOrderProductsColumns(): Column<CartItem>[] {
       key: "appliedOffer",
       label: "العرض المطبق",
       render: (item) => (
-        <span className="text-muted-foreground">-</span>
+        <span className="text-xl">--</span>
       ),
     },
     {
@@ -48,7 +48,7 @@ export function createOrderProductsColumns(): Column<CartItem>[] {
       label: "السعر الإجمالي",
       sortable: true,
       render: (item) => (
-        <span className="text-muted-foreground"> {item.totalPrice} <PriceCode /> </span>
+        <span className="font-bold"> {item.totalPrice} <PriceCode /> </span>
       ),
     },
 

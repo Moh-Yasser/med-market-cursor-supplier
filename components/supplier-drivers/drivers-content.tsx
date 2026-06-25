@@ -1,131 +1,190 @@
-"use client"
+'use client'
+import { DriversApiResponse, DriverStatus,Driver,DriversFilters } from "@/types/supplier-drivers";
+import { CheckCircle2, Truck, UserPlus, ListFilter } from "lucide-react";
+import { DriverCard } from "./driver-card";
+import { useQuery } from "@tanstack/react-query";
+import { DRIVERS_KEYS } from "@/lib/drivers/drivers-keys";
+import { fetchDrivers } from "@/lib/drivers/drivers.client";
+import { ORDERS_KEYS } from "@/lib/orders/orders-keys";
+import { fetchOrders } from "@/lib/orders/orders.client";
+import {  SupplierOrdersFilters } from "@/types/supplier-orders";
+import { useSearchParams } from "next/dist/client/components/navigation";
+import { useState } from "react";
+import { Order } from "@/types/orders_cart";
+import { Button } from "../ui/button";
+import Link from "next/link";
+import { AddDriverDialog } from "./add-driver-dialog";
+import { DriversContentSkeleton } from "./drivers-content-skeleton";
+import { DriversContentError } from "./drivers-content-error";
 
-import { useMemo, useState } from "react"
-import { useSearchParams } from "next/navigation"
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Plus, Eye, Trash2, Loader2 } from "lucide-react"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import { Card } from "@/components/ui/card"
-import { Pagination } from "@/components/table/pagination"
-import { AddDriverDialog } from "./add-driver-dialog"
-import { driversKeys } from "@/lib/drivers/drivers-keys"
-import { fetchDrivers, deleteDriver } from "@/lib/drivers/drivers.client"
-import type { DriverUser } from "@/types/supplier-drivers"
-import type { PaginationType } from "@/types/api-response"
+function StatCard({
+  label,
+  value,
+  caption,
+  icon,
+  iconClassName,
+}: {
+  label: string;
+  value: string;
+  caption: string;
+  icon: React.ReactNode;
+  iconClassName: string;
+}) {
+  return (
+    <div className="flex flex-col justify-center rounded-xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm">
+      <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
+        {label}
+      </p>
+      <div className="flex items-center gap-4">
+        <div
+          className={`flex size-12 items-center justify-center rounded-full ${iconClassName}`}
+        >
+          {icon}
+        </div>
+        <div>
+          <span className="font-heading text-4xl font-bold text-on-surface">
+            {value}
+          </span>
+          <p className="text-xs text-on-surface-variant">{caption}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function getFiltersFromParams(params: URLSearchParams): DriversFilters {
+  return {
+    status: (params.get("status") as DriverStatus | "all" | null) || "all",
+    page: parseInt(params.get("page") || "1", 10),
+    per_page: parseInt(params.get("per_page") || "15", 10),
+  };
+}
 
 export function DriversContent() {
-  const searchParams = useSearchParams()
-  const queryClient = useQueryClient()
-  const [showAdd, setShowAdd] = useState(false)
+  const searchParams = useSearchParams();
+ const [showAdd, setShowAdd] = useState(false)
+  const [driversFilters, setDriversFilters] = useState<DriversFilters>(() =>
+    getFiltersFromParams(searchParams),
+  );
+  const OrdersFilters: SupplierOrdersFilters = {
+    status: "pending",
+  };
 
-  const page = parseInt(searchParams.get("page") || "1", 10)
-  const perPage = parseInt(searchParams.get("per_page") || "15", 10)
+const {
+  data: DriversData,
+  isLoading: driversLoading,
+  isError: driversError,
+  isFetching: driversFetching,
+  refetch: refetchDrivers,
+} = useQuery<DriversApiResponse>({
+  queryKey: DRIVERS_KEYS.list(driversFilters),
+  queryFn: () => fetchDrivers(driversFilters),
+});
 
-  const filters = useMemo(() => ({ page, per_page: perPage }), [page, perPage])
+const {
+  data: ordersData,
+  isLoading: ordersLoading,
+  isError: ordersError,
+  isFetching: ordersFetching,
+  refetch: refetchOrders,
+} = useQuery({
+  queryKey: ORDERS_KEYS.list(OrdersFilters),
+  queryFn: () => fetchOrders(OrdersFilters),
+});
+  const drivers : Driver[] = DriversData?.data || [] ;
+  const pendingOrders : Order[] = ordersData?.data || [] ;
 
-  const { data, isLoading, isFetching } = useQuery({
-    queryKey: driversKeys.list(filters),
-    queryFn: () => fetchDrivers(filters),
-  })
+if (driversLoading || ordersLoading) {
+  return <DriversContentSkeleton />;
+}
 
-  const deleteMutation = useMutation({
-    mutationFn: deleteDriver,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: driversKeys.all }),
-  })
-
-  const drivers: DriverUser[] = data?.data ?? []
-  const pagination: PaginationType = data?.pagination ?? {
-    current_page: 1, per_page: perPage, total: 0, last_page: 1, from: 0, to: 0,
-  }
-
-  const loading = isLoading || isFetching
-
-  const handleDelete = (id: number) => {
-    if (confirm("هل أنت متأكد من حذف هذا السائق؟")) {
-      deleteMutation.mutate(id)
-    }
-  }
+if (driversError || ordersError) {
+  return (
+    <DriversContentError
+      isRetrying={driversFetching || ordersFetching}
+      onRetry={() => {
+        void refetchDrivers();
+        void refetchOrders();
+      }}
+    />
+  );
+}
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div className="flex-1 overflow-y-auto ">
+      {/* Page Header */}
+      <div className="mb-6 flex flex-col items-start gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">السائقين</h1>
-          <p className="text-sm text-muted-foreground mt-1">إدارة أسطول التوصيل</p>
+          <h2 className="font-heading text-lg font-bold text-on-surface sm:text-xl">
+            نظرة عامة على السائقين
+          </h2>
+          <p className="mt-1 text-xs text-on-surface-variant">
+            إدارة المسارات النشطة وحالات السائقين ومقاييس الأداء.
+          </p>
         </div>
-        <Button onClick={() => setShowAdd(true)} className="gap-2">
-          <Plus className="h-4 w-4" />
+        <Button onClick={() => setShowAdd(true)}>
+          <UserPlus className="size-4.5" />
           إضافة سائق
         </Button>
       </div>
 
-      <div className="rounded-lg border bg-card">
-        <Table>
-          <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead>الاسم</TableHead>
-              <TableHead>البريد الإلكتروني</TableHead>
-              <TableHead className="text-center">الإجراءات</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {loading ? (
-              Array.from({ length: 5 }).map((_, i) => (
-                <TableRow key={i}>
-                  {Array.from({ length: 3 }).map((_, j) => (
-                    <TableCell key={j}><div className="h-4 w-full animate-pulse rounded bg-muted" /></TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : drivers.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={3} className="h-32 text-center">
-                  <div className="text-muted-foreground">لا يوجد سائقين. أضف أول سائق.</div>
-                </TableCell>
-              </TableRow>
-            ) : (
-              drivers.map((driver) => (
-                <TableRow key={driver.id}>
-                  <TableCell className="font-medium">{driver.name}</TableCell>
-                  <TableCell className="text-muted-foreground">{driver.email}</TableCell>
-                  <TableCell className="text-center">
-                    <div className="flex items-center justify-center gap-1">
-                      <Link href={`/drivers/${driver.id}`}>
-                        <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-primary">
-                          <Eye className="h-4 w-4" />
-                          عرض
-                        </Button>
-                      </Link>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                        onClick={() => handleDelete(driver.id)}
-                        disabled={deleteMutation.isPending}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-        <Pagination pagination={pagination} isLoading={loading} />
+      {/* Stat Cards */}
+      <div className="mb-5 grid grid-cols-1 gap-5 md:grid-cols-2">
+        <StatCard
+          label="السائقين المتاحين"
+          value={drivers.reduce(
+            (acc: number, driver) =>
+              driver.driverStatus === "available" ||
+              driver.driverStatus === "On delivery"
+                ? acc + 1
+                : acc,
+            0,
+          ).toString()}
+          caption="متصل "
+          icon={<CheckCircle2 className="size-6" />}
+          iconClassName="bg-teal/20 text-teal"
+        />
+        <StatCard
+          label="الطلبات المعلقة"
+          value={pendingOrders.length.toString()}
+          caption="في انتظار الإرسال"
+          icon={<Truck className="size-6" />}
+          iconClassName="bg-warning text-warning-foreground"
+        />
       </div>
 
-      <AddDriverDialog open={showAdd} onOpenChange={setShowAdd} />
+      <div className="mb-4 mt-8 flex items-center justify-between">
+        <h3 className="font-heading text-xl font-bold text-on-surface">
+          القائمة النشطة
+        </h3>
+        <div className="flex gap-2">
+          <select className="h-8 rounded border border-outline-variant bg-surface-container-lowest px-2 text-xs font-semibold text-on-surface outline-none focus:ring-1 focus:ring-on-surface">
+            <option>جميع الحالات</option>
+            <option>قيد التوصيل</option>
+            <option>متاح</option>
+          </select>
+          <button
+            aria-label="تصفية"
+            className="flex size-8 items-center justify-center rounded border border-outline-variant bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container-low"
+          >
+            <ListFilter className="size-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* Driver Cards */}
+      <div className="grid grid-cols-1 gap-4 pb-8 md:grid-cols-2 xl:grid-cols-3">
+        {drivers.map((driver) => (
+          <Link
+  href={`/drivers/${driver.id}`}
+  className="block h-full w-full"
+  key={driver.name}
+>
+          <DriverCard  driver={driver} />
+        </Link>
+        ))}
+      </div>
+       <AddDriverDialog open={showAdd} onOpenChange={setShowAdd} />
     </div>
-  )
+  );
 }

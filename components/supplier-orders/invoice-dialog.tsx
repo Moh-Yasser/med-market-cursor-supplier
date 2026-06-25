@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
 import { Loader2 } from "lucide-react"
-import { ordersKeys } from "@/lib/orders/orders-keys"
+import { ORDERS_KEYS } from "@/lib/orders/orders-keys"
 import { fetchOrderInvoice } from "@/lib/orders/orders.client"
 
 type Props = {
@@ -20,7 +20,7 @@ type Props = {
 export function InvoiceDialog({ orderId, onClose }: Props) {
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ordersKeys.invoice(orderId ?? 0),
+    queryKey: ORDERS_KEYS.invoice(orderId ?? 0),
     queryFn: () => fetchOrderInvoice(orderId!),
     enabled: !!orderId,
   })

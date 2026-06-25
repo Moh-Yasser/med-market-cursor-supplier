@@ -1,8 +1,8 @@
 import type { SupplierProductsFilters } from "@/types/supplier-products"
 
-export const productsKeys = {
+export const PRODUCTS_KEYS = {
   all: ["supplier-products"] as const,
   list: (filters?: SupplierProductsFilters) =>
-    [...productsKeys.all, "list", filters ?? {}] as const,
-  detail: (id: number) => [...productsKeys.all, "detail", id] as const,
+    [...PRODUCTS_KEYS.all, "list", filters ?? {}] as const,
+  detail: (id: string | number) => [...PRODUCTS_KEYS.all, "detail", id] as const,
 }

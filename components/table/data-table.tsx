@@ -41,11 +41,11 @@ type DirectTableProps<T> = {
 type DataTableProps<T extends { id: number }> =
   BaseTableProps<T> & (FetchTableProps<T> | DirectTableProps<T>)
 
-  function isFetchMode<T extends { id: number }>(
-    props: DataTableProps<T>
-  ): props is BaseTableProps<T> & FetchTableProps<T> {
-    return "queryKey" in props && "queryFn" in props
-  }
+function isFetchMode<T extends { id: number }>(
+  props: DataTableProps<T>
+): props is BaseTableProps<T> & FetchTableProps<T> {
+  return "queryKey" in props && "queryFn" in props
+}
 
 export function DataTable<T extends { id: number }>(props: DataTableProps<T>) {
   const {
@@ -64,7 +64,7 @@ export function DataTable<T extends { id: number }>(props: DataTableProps<T>) {
     queryFn: fetchMode ? props.queryFn : skipToken,
     enabled: fetchMode,
   })
-  
+
   const defaultPagination: PaginationType = {
     current_page: 1,
     per_page: 15,
@@ -74,7 +74,6 @@ export function DataTable<T extends { id: number }>(props: DataTableProps<T>) {
     to: 0,
   }
 
-  
   let items: T[] = []
 
   if (fetchMode) {
@@ -93,44 +92,57 @@ export function DataTable<T extends { id: number }>(props: DataTableProps<T>) {
           last_page: 1,
           from: items.length ? 1 : 0,
           to: items.length,
-        } 
+        }
 
   return (
-    <div>
+    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
       <Table>
         <TableHeader>
-          <TableRow className="hover:bg-transparent">
+          <TableRow className="border-b bg-slate-100 hover:bg-slate-100">
             {columns.map((column) => (
               <TableHead
                 key={column.key}
-                className={cn("text-sm font-medium", "text-center", column.className)}
+                className={cn(
+                  "h-12 text-center text-[11px] font-semibold uppercase tracking-wide text-slate-700",
+                  column.className
+                )}
               >
                 {column.label}
               </TableHead>
             ))}
           </TableRow>
         </TableHeader>
+
         <TableBody>
           {isLoading || isFetching ? (
             Array.from({ length: 5 }).map((_, i) => (
-              <TableRow key={i}>
+              <TableRow key={i} className="h-16">
                 {columns.map((column) => (
                   <TableCell key={column.key}>
-                    <div className="h-4 w-full animate-pulse rounded bg-muted" />
+                    <div className="h-4 w-full animate-pulse rounded bg-slate-200" />
                   </TableCell>
                 ))}
               </TableRow>
             ))
           ) : items.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-32 text-center text-muted-foreground">
+              <TableCell
+                colSpan={columns.length}
+                className="h-40 text-center text-slate-500"
+              >
                 <div className="flex flex-col items-center gap-2">
-                  <Search className="h-8 w-8 text-muted-foreground/50" />
-                  <p className="text-muted-foreground">
-                    {hasActiveFilters ? "No results match the selected filters" : emptyMessage}
+                  <Search className="h-8 w-8 text-slate-400" />
+                  <p>
+                    {hasActiveFilters
+                      ? "No results match the selected filters"
+                      : emptyMessage}
                   </p>
                   {hasActiveFilters && (
-                    <Button variant="link" onClick={onClearFilters} className="text-primary">
+                    <Button
+                      variant="link"
+                      onClick={onClearFilters}
+                      className="text-primary"
+                    >
                       Clear filters
                     </Button>
                   )}
@@ -142,16 +154,24 @@ export function DataTable<T extends { id: number }>(props: DataTableProps<T>) {
               <TableRow
                 key={item.id}
                 onClick={onRowClick ? () => onRowClick(item) : undefined}
-                className={cn(onRowClick && "cursor-pointer")}
+                className={cn(
+                  "h-16 border-b border-slate-100 transition-colors hover:bg-slate-50",
+                  onRowClick && "cursor-pointer"
+                )}
               >
                 {columns.map((column) => (
-                  <TableCell key={column.key} className={cn("text-sm", "text-center", column.className)}>
+                  <TableCell
+                    key={column.key}
+                    className={cn(
+                      "py-4 text-center text-sm text-slate-700",
+                      column.className
+                    )}
+                  >
                     {column.render
                       ? column.render(item)
-                      : (typeof column.key === "string"
+                      : typeof column.key === "string"
                         ? (item as any)[column.key]
-                        : item[column.key])
-                      }
+                        : item[column.key]}
                   </TableCell>
                 ))}
               </TableRow>
@@ -159,7 +179,15 @@ export function DataTable<T extends { id: number }>(props: DataTableProps<T>) {
           )}
         </TableBody>
       </Table>
-      {activatePagination && <Pagination pagination={pagination} isLoading={isLoading || isFetching} />}
+
+      {activatePagination && (
+        <div className=" px-4 py-3">
+          <Pagination
+            pagination={pagination}
+            isLoading={isLoading || isFetching}
+          />
+        </div>
+      )}
     </div>
   )
 }

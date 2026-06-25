@@ -14,15 +14,19 @@
   --teal-light: 0.85 0.12 162.48;
   --teal-dark: 0.55 0.2 162.48;
 
+    /* Amber status colors */
+  --warning: 48 96% 89%; /* similar to amber-100 */
+  --warning-foreground: 32 95% 44%; /* similar to amber-700 */
+
   /* Secondary - Dark Slate */
   --secondary-dark: 222 47% 11%; /* #0F172A */
 
   /* Accent Green - Success/Health */
   --accent-green: 152 69% 52%; /* #34D399 */
-   
+
   /* Accent Amber - Warning/Alerts */
   --accent-amber: 43 96% 57%; /* #FBBF24 */
-  
+
   /* Neutral Background */
   --neutral-bg: 210 40% 98%; /* #F8FAFC */
   --neutral-50: 210 40% 96%;
@@ -107,6 +111,10 @@
   --muted: 0 0% 18%; /* Pure neutral gray background for dark mode */
   --muted-foreground: 0 0% 65%; /* Pure neutral gray text for dark mode */
 
+    /* Amber status colors (dark mode) */
+  --warning: 43 96% 20%; /* amber-900 */
+  --warning-foreground: 43 96% 56%; /* amber-400 */
+
   --accent: var(--neutral-800);
   --accent-foreground: var(--neutral-50);
 
@@ -143,6 +151,8 @@
   --color-primary-foreground: hsl(var(--primary-foreground));
   --color-secondary: hsl(var(--secondary));
   --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-warning: hsl(var(--warning));
+  --color-warning-foreground: hsl(var(--warning-foreground));
   --color-muted: hsl(var(--muted));
   --color-muted-foreground: hsl(var(--muted-foreground));
   --color-accent: hsl(var(--accent));
@@ -183,7 +193,7 @@
   * {
     @apply border-border outline-ring/50;
   }
- 
+
   body {
     @apply bg-background text-foreground;
   }

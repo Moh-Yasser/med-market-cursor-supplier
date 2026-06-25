@@ -1,24 +1,37 @@
 import type React from "react"
-import { SidebarClient } from "@/components/supplier-layout/sidebar-client"
+import { SupplierDashboardShell } from "@/components/supplier-layout/supplier-dashboard-shell"
+import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query"
+import { getMe } from "@/lib/api/auth"
 
 export const metadata = {
-  title: "سوق الدواء — بوابة الصيدلية",
-  description: "لوحة إدارة الصيدلية",
+  title: "سوق الدواء — بوابة المورد",
+  description: "لوحة إدارة التوريدات الطبية",
 }
 
-export default function SupplierLayout({
+export default async function SupplierLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const queryClient = new QueryClient()
+
+  await queryClient.prefetchQuery({
+    queryKey: ["me"],
+    queryFn: () => getMe(),
+  })
+
   return (
-    <>
-      <SidebarClient />
-      <div className="flex min-h-screen flex-col">
-        <main className="flex-1 xl:mr-60">
-          <div className="p-4 sm:p-6 lg:p-8">{children}</div>
+    <div className="min-h-screen bg-[#f8f9ff] text-[#0d1c2e]">
+      <SupplierDashboardShell />
+      <div className="min-h-screen xl:mr-64 max-xl:mt-6">
+        <main className="min-h-screen">
+          <div className="mx-auto max-w-360 p-4  sm:pX-6 ">
+            <HydrationBoundary state={dehydrate(queryClient)}>
+              {children}
+            </HydrationBoundary>
+          </div>
         </main>
       </div>
-    </>
+    </div>
   )
 }

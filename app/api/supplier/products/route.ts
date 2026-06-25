@@ -1,32 +1,18 @@
 import { NextRequest, NextResponse } from "next/server"
 import { phpFetch } from "@/lib/api/php.server"
 import { requireAuth, safeErrorResponse } from "@/lib/api/auth-guard"
+import type { ProductsApiResponse } from "@/types/products"
 
-export async function GET(req: NextRequest) {
-  const denied = await requireAuth(req)
+export async function GET(request: NextRequest) {
+  const denied = await requireAuth(request)
   if (denied) return denied
 
   try {
-    const qs = req.nextUrl.searchParams.toString()
-    const data = await phpFetch(`/products${qs ? `?${qs}` : ""}`)
+    const queryString = request.nextUrl.searchParams.toString()
+    const phpPath = `/products${queryString ? `?${queryString}` : ""}`
+    const data = await phpFetch<ProductsApiResponse>(phpPath, { method: "GET" })
     return NextResponse.json(data)
-  } catch (err) {
-    return safeErrorResponse(err)
-  }
-}
-
-export async function POST(req: NextRequest) {
-  const denied = await requireAuth(req)
-  if (denied) return denied
-
-  try {
-    const body = await req.json()
-    const data = await phpFetch("/products", {
-      method: "POST",
-      body: JSON.stringify(body),
-    })
-    return NextResponse.json(data)
-  } catch (err) {
-    return safeErrorResponse(err)
+  } catch (error) {
+    return safeErrorResponse(error)
   }
 }

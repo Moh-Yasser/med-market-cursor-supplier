@@ -1,6 +1,8 @@
 import { ApiResponse } from "./api-response";
 import { Category, Manufacturer } from "./filters";
 
+ export type SupplierClassifications = "retail" | "wholesale" | "hybrid" 
+
   export interface Company {
   id: number;
   name: string;
@@ -20,6 +22,7 @@ import { Category, Manufacturer } from "./filters";
 }
 
 export interface Supplier extends Company {
+  supplierClassification:SupplierClassifications,
   description: string;
   category: Category[];
   manufacturer: Manufacturer[];

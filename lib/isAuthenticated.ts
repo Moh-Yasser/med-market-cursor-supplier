@@ -1,30 +1,28 @@
 import { NextRequest } from "next/server";
 import type { MeApiResponse } from "@/types/auth";
+import { phpFetch } from "./api/php.server";
+import { PhpApiError } from "./error";
 
-const PHP_API_BASE = process.env.PHP_API_BASE!;
+type AuthResult =
+  | { success: true; data: MeApiResponse }
+  | { success: false; status: number; message: string };
 
-export async function isAuthenticated(
-  req: NextRequest
-): Promise<MeApiResponse | { success: false }> {
+export async function isAuthenticated(req: NextRequest): Promise<AuthResult> {
   const token = req.cookies.get("access_token")?.value;
-  
+
   if (!token) {
-    return { success: false };
+    return { success: false, status: 401, message: "No access token found" };
   }
-  
+
   try {
-    const res = await fetch(`${PHP_API_BASE}/auth/me`, {
+    const data = await phpFetch<MeApiResponse>("/auth/me", {
       headers: { Authorization: `Bearer ${token}` },
-      cache: "no-store",
     });
-    
-    if (!res.ok) {
-      return { success: false };
-    }
-    
-    const data: MeApiResponse = await res.json();
-    return data;
+    return { success: true, data };
   } catch (err) {
-    return { success: false };
+    if (err instanceof PhpApiError) {
+      return { success: false, status: err.status, message: err.message };
+    }
+    return { success: false, status: 500, message: "Unknown auth error" };
   }
 }

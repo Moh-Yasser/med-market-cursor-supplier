@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { isAuthenticated } from "@/lib/isAuthenticated"
+import { PhpApiError } from "@/lib/error"
 
 export async function requireAuth(req: NextRequest): Promise<NextResponse | null> {
   const token = req.cookies.get("access_token")?.value
@@ -22,48 +23,44 @@ type SupplierCompanyAuthResult =
   | { ok: true; companyId: number }
   | { ok: false; response: NextResponse }
 
-export async function requireSupplierCompanyId(req: NextRequest): Promise<SupplierCompanyAuthResult> {
-  const me = await isAuthenticated(req)
+export async function requireSupplierCompanyId(req: NextRequest): Promise<number> {
+  const me = await isAuthenticated(req);
+  if(me.success==true){
 
-  if (!("success" in me) || !me.success) {
-    return {
-      ok: false,
-      response: NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 }),
-    }
-  }
-
-  if (me.data.role !== "supplier") {
-    return {
-      ok: false,
-      response: NextResponse.json({ success: false, error: "Forbidden" }, { status: 403 }),
-    }
-  }
-
-  const companyId = Number(me.data.company?.id)
+  const companyId = Number(me.data.data.company?.id);
   if (!Number.isInteger(companyId) || companyId <= 0) {
-    return {
-      ok: false,
-      response: NextResponse.json(
-        { success: false, error: "Supplier company is missing from session" },
-        { status: 403 },
-      ),
-    }
+    throw new PhpApiError(403, "Forbidden", "Supplier company is missing from session");
   }
 
-  return { ok: true, companyId }
+  return companyId;
+}
+else {
+    throw new PhpApiError(403, "Forbidden", "You do not have access to this resource");
+
+}
 }
 
 
 export function safeErrorResponse(err: unknown, fallbackStatus = 500) {
-  if (err && typeof err === "object" && "status" in err && "message" in err) {
-    const e = err as { status: number; message: string; payload?: unknown }
+  console.error("[API Error]", err);
+
+  if (err instanceof PhpApiError) {
     return NextResponse.json(
-      { success: false, error: e.message },
-      { status: e.status },
-    )
+      {
+        success: false,
+        error: err.title,
+        message: err.message,
+        ...(err.errors && { errors: err.errors }),
+      },
+      { status: err.status === 0 ? 503 : err.status },
+    );
   }
+
   return NextResponse.json(
-    { success: false, error: "An unexpected error occurred" },
+    { success: false, error: "Unexpected Error", message: "An unexpected error occurred" },
     { status: fallbackStatus },
-  )
+  );
 }
+
+
+

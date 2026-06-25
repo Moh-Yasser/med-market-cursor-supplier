@@ -1,10 +1,10 @@
 import type { SupplierOrdersFilters } from "@/types/supplier-orders"
 
-export const ordersKeys = {
+export const ORDERS_KEYS = {
   all: ["supplier-orders"] as const,
-  lists: () => [...ordersKeys.all, "list"] as const,
-  list: (filters?: SupplierOrdersFilters) => [...ordersKeys.lists(), filters] as const,
-  details: () => [...ordersKeys.all, "detail"] as const,
-  detail: (id: string | number) => [...ordersKeys.details(), id] as const,
-  invoice: (orderId: string | number) => [...ordersKeys.all, "invoice", orderId] as const,
+  lists: () => [...ORDERS_KEYS.all, "list"] as const,
+  list: (filters?: SupplierOrdersFilters) => [...ORDERS_KEYS.lists(), filters] as const,
+  details: () => [...ORDERS_KEYS.all, "detail"] as const,
+  detail: (id: string | number) => [...ORDERS_KEYS.details(), id] as const,
+  invoice: (orderId: string | number) => [...ORDERS_KEYS.all, "invoice", orderId] as const,
 }

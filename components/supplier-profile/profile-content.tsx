@@ -9,7 +9,7 @@ import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/componen
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import { fetchProfile } from "@/lib/profile/profile.client"
-import { profileKeys } from "@/lib/profile/profile-keys"
+import { PROFILE_KEYS } from "@/lib/profile/profile-keys"
 import { EditCompanyDialog } from "./profile-edit-company-dialog"
 import { EditUserDialog } from "./profile-edit-user-dialog"
 import { ChangePasswordDialog } from "./profile-password-dialog"
@@ -22,13 +22,13 @@ export function ProfileContent() {
   const [openPassword, setOpenPassword] = useState(false)
 
   const { data, isLoading } = useQuery({
-    queryKey: profileKeys.me(),
+    queryKey: PROFILE_KEYS.me(),
     queryFn: fetchProfile,
   })
 
   const refetchMutation = useMutation({
     mutationFn: async () => {
-      await qc.invalidateQueries({ queryKey: profileKeys.me() })
+      await qc.invalidateQueries({ queryKey: PROFILE_KEYS.me() })
     },
   })
 
@@ -165,15 +165,7 @@ export function ProfileContent() {
                 </div>
               </div>
             </CardContent>
-          </Card>
-
-          <div className="rounded-3xl bg-muted/40 p-4 text-sm text-muted-foreground">
-            اكتمال الملف الشخصي
-            <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-muted">
-              <div className="h-full w-[85%] rounded-full bg-primary" />
-            </div>
-            <div className="mt-2 text-xs">مكتمل بنسبة 85%، أضف تفاصيل أكثر لتجربة أفضل.</div>
-          </div>
+          </Card>   
         </div>
       </div>
 

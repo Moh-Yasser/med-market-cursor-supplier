@@ -71,3 +71,25 @@ export interface SupplierOffersFilters {
   offer_type?: string
   is_active?: string
 }
+
+
+export interface ProductOffer {
+        id: number;
+        name: string;
+        description: string;
+        offerType: OfferType;
+        discountValue: number;
+        discountType: string;
+        quantityRequired: number | null;
+        quantityFree: number | null;
+        startDate: string;
+        endDate: string;
+        isActive: boolean;
+        isCurrentlyActive: boolean;
+        pivot?: {
+            quantityRequired: number | null;
+            quantityFree: number | null;
+            discountOverride: number | null;
+            discountTypeOverride: string | null;
+        };
+}

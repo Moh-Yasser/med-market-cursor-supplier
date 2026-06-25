@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { InvoiceDialog } from "./invoice-dialog"
-import { ordersKeys } from "@/lib/orders/orders-keys"
+import { ORDERS_KEYS } from "@/lib/orders/orders-keys"
 import { fetchOrders } from "@/lib/orders/orders.client"
 import type { Order, OrderStatus } from "@/types/orders_cart"
 import type { SupplierOrdersFilters } from "@/types/supplier-orders"
@@ -77,13 +77,13 @@ export function OrdersContent() {
   }, [debouncedQuery, pathname, replace])
 
   const { data: ordersData } = useQuery({
-    queryKey: ordersKeys.list(filters),
+    queryKey: ORDERS_KEYS.list(filters),
     queryFn: () => fetchOrders(filters),
   })
 
   const pendingOrders = ordersData?.data?.filter((order) => order.status == "pending")
   
-  const queryKey = useMemo(() => ordersKeys.list(filters), [filters]);
+  const queryKey = useMemo(() => ORDERS_KEYS.list(filters), [filters]);
   const queryFn = useMemo(() => () => fetchOrders(filters), [filters]);
 
   const columns = useMemo(

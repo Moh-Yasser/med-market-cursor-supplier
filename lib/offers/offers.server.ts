@@ -1,6 +1,6 @@
 import { phpFetch } from "@/lib/api/php.server"
 import { createQueryString } from "@/lib/api/queryString"
-import type { OfferApiResponse, OffersApiResponse, SupplierOffersFilters } from "@/types/offer"
+import type { OfferApiResponse, OffersApiResponse, SupplierOffersFilters } from "@/types/offers"
 
 export async function getOffers(filters?: SupplierOffersFilters) {
   const qs = createQueryString(filters)

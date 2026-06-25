@@ -1,5 +1,5 @@
-export const profileKeys = {
+export const PROFILE_KEYS = {
   all: ["profile"] as const,
-  me: () => [...profileKeys.all, "me"] as const,
+  me: () => [...PROFILE_KEYS.all, "me"] as const,
 }
 

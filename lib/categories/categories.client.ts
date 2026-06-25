@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AxiosApi } from "@/lib/api/nextBff.client";
+import { AxiosApi, handleAxiosError } from "@/lib/api/nextBff.client";
 
 
 const CATEGORIES_ROUTE = "/api/supplier/categories";
@@ -13,14 +13,6 @@ export async function getAllCategories(
         const response = await AxiosApi.get<CategoriesApiResponse>(CATEGORIES_ROUTE);
         return response.data;
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-            const message =
-                error.response?.data?.message ||
-                error.response?.data?.error ||
-                error.message ||
-                "Request failed";
-            throw new Error(message);
-        }
-        throw error;
+      handleAxiosError(error);
     }
 }

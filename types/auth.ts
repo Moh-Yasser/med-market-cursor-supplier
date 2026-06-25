@@ -63,6 +63,7 @@ export type LoginActionResult =
 
 export interface MeApiResponse {
   success: boolean;
+  status?:number;
   message?: string;
   data: MeUser;
 }

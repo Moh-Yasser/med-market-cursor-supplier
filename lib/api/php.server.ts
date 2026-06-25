@@ -1,18 +1,7 @@
 import { cookies } from "next/headers";
-
+import { PhpApiError, BackendErrorBody } from "@/lib/error";
 
 const PHP_API_BASE = process.env.PHP_API_BASE!;
-
-export class PhpApiError extends Error {
-  status: number;
-  payload?: unknown;
-
-  constructor(status: number, message: string, payload?: unknown) {
-    super(message);
-    this.status = status;
-    this.payload = payload;
-  }
-}
 
 export async function phpFetch<T>(
   path: string,
@@ -21,15 +10,9 @@ export async function phpFetch<T>(
   const token = (await cookies()).get("access_token")?.value;
 
   const headers = new Headers(options.headers);
-
-  if (!headers.has("Authorization") && token) {
+  if (!headers.has("Authorization") && token)
     headers.set("Authorization", `Bearer ${token}`);
-  }
-
-  if (!headers.has("Accept")) {
-    headers.set("Accept", "application/json");
-  }
-
+  if (!headers.has("Accept")) headers.set("Accept", "application/json");
   if (options.body && !headers.get("Content-Type"))
     headers.set("Content-Type", "application/json");
 
@@ -41,7 +24,6 @@ export async function phpFetch<T>(
 
   const text = await res.text();
   let data: unknown = null;
-
   if (text) {
     try {
       data = JSON.parse(text);
@@ -51,13 +33,16 @@ export async function phpFetch<T>(
   }
 
   if (!res.ok) {
-    const message =
-      typeof data === "object" && data && "error" in data
-        ? String((data as { error?: string }).error || "")
-        : `PHP API error (${res.status})`;
+    const body =
+      typeof data === "object" && data !== null
+        ? (data as Partial<BackendErrorBody>)
+        : {};
+
     throw new PhpApiError(
       res.status,
-      message || `PHP API error (${res.status})`,
+      body.error ?? `PHP API error (${res.status})`,
+      body.message ?? `PHP API error (${res.status})`,
+      body.errors,
       data,
     );
   }

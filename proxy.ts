@@ -14,7 +14,7 @@ export async function proxy(req: NextRequest) {
     }
 
     const user = authResult.data
-    if (user.role === "buyer") {
+    if (user.data.role === "buyer") {
       const pharmacyUrl = process.env.PHARMACY_APP_URL || "/login"
       return NextResponse.redirect(new URL(pharmacyUrl))
     }
@@ -22,10 +22,10 @@ export async function proxy(req: NextRequest) {
 
   if (isPublic && authResult.success) {
     const user = authResult.data
-    if (user.role === "supplier") {
+    if (user.data.role === "supplier") {
       return NextResponse.redirect(new URL("/dashboard", req.nextUrl))
     }
-    if (user.role === "buyer") {
+    if (user.data.role === "buyer") {
       const pharmacyUrl = process.env.PHARMACY_APP_URL || "/login"
       return NextResponse.redirect(new URL(pharmacyUrl))
     }

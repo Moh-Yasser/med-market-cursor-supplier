@@ -4,9 +4,9 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Plus, Trash2, Loader2, Pencil } from "lucide-react"
-import { offersKeys } from "@/lib/offers/offers-keys"
+import { OFFERS_KEYS } from "@/lib/offers/offers-keys"
 import { fetchOffers, deleteOffer, updateOffer } from "@/lib/offers/offers.client"
-import type { createOfferType, createBundleOfferType, ProductOffer, OffersApiResponse } from "@/types/offer"
+import type { createOfferType, createBundleOfferType, ProductOffer, OffersApiResponse } from "@/types/offers"
 import SupplierOfferIntro from "./supplier-offer-intro"
 import Link from "next/link"
 import OfferCard from "./offer-card"
@@ -17,13 +17,13 @@ export function OffersContent() {
   const queryClient = useQueryClient()
 
   const { data, isLoading, isFetching } = useQuery({
-    queryKey: offersKeys.list(),
+    queryKey: OFFERS_KEYS.list(),
     queryFn: () => fetchOffers(),
   })
 
   const deleteMutation = useMutation({
     mutationFn: deleteOffer,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: offersKeys.all }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: OFFERS_KEYS.all }),
   })
 
   const updateMutation = useMutation({
@@ -35,7 +35,7 @@ export function OffersContent() {
       payload: createBundleOfferType | createOfferType
     }) => updateOffer({ id: offerId, payload }),
     onSuccess: (_, { offerId, payload }) => {
-      queryClient.setQueryData<OffersApiResponse>(offersKeys.list(), (old) => {
+      queryClient.setQueryData<OffersApiResponse>(OFFERS_KEYS.list(), (old) => {
         if (!old?.data) return old
         return {
           ...old,

@@ -32,7 +32,7 @@ import type {
   createBundleOfferType,
   createOfferType,
   OfferType,
-} from "@/types/offer"
+} from "@/types/offers"
 
 import { createOffer, updateOffer } from "@/lib/offers/offers.client"
 import { useRouter } from "next/navigation"

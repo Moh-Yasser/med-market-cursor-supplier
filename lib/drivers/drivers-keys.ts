@@ -1,10 +1,10 @@
-import type { SupplierDriversFilters, DriverOrdersFilters } from "@/types/supplier-drivers"
+import type { DriversFilters, DriverOrdersFilters } from "@/types/supplier-drivers"
 
-export const driversKeys = {
+export const DRIVERS_KEYS = {
   all: ["supplier-drivers"] as const,
-  lists: () => [...driversKeys.all, "list"] as const,
-  list: (filters?: SupplierDriversFilters) => [...driversKeys.lists(), filters] as const,
-  detail: (id: string | number) => [...driversKeys.all, "detail", id] as const,
+  lists: () => [...DRIVERS_KEYS.all, "list"] as const,
+  list: (filters?: DriversFilters) => [...DRIVERS_KEYS.lists(), filters] as const,
+  detail: (id: string | number) => [...DRIVERS_KEYS .all, "detail", id] as const,
   orders: (id: string | number, filters?: DriverOrdersFilters) =>
-    [...driversKeys.all, "driver-orders", id, filters] as const,
+    [...DRIVERS_KEYS.all, "driver-orders", id, filters] as const,
 }

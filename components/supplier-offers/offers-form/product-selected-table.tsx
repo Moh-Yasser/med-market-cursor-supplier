@@ -1,13 +1,13 @@
 "use client"
 
 import { useMemo, useState,useEffect } from "react"
-import type { OfferType } from "@/types/offer"
+import type { OfferType } from "@/types/offers"
 import type { Product } from "@/types/products"
 import { DataTable } from "@/components/table/data-table"
 import { getProductColumns } from "@/components/supplier-offers/offers-form/products-columns"
 import { Package, ShoppingBag } from "lucide-react"
-import { productsKeys } from "@/lib/products/products-keys"
-import { fetchSupplierProducts } from "@/lib/products/products.client"
+import { PRODUCTS_KEYS } from "@/lib/products/products-keys"
+import { fetchMyProducts } from "@/lib/products/products.client"
 import { ProductSearch } from "@/components/supplier-products/products-search"
 import { useSearchParams } from "next/navigation"
 import { ProductsFilters } from "@/types/filters"
@@ -41,9 +41,9 @@ export function ProductSelectionTable({
   onProductsChange,
 }: ProductSelectionTableProps) {
   const filters = useProductsFiltersFromURL();
-  const queryKey = useMemo(() => productsKeys.list(filters), [filters]);
+  const queryKey = useMemo(() => PRODUCTS_KEYS.list(filters), [filters]);
 
-  const queryFn = useMemo(() => () => fetchSupplierProducts(filters), [filters]);
+  const queryFn = useMemo(() => () => fetchMyProducts(filters), [filters]);
  const [products, setProducts] = useState<
   { product_id: number; quantity: number }[]
 >([])

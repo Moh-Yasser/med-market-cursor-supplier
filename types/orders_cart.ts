@@ -1,7 +1,7 @@
 import { ApiResponse } from "./api-response";
 import { User } from "./auth";
 import { Company, Supplier } from "./company";
-import { ProductOffer } from "./offer";
+import { ProductOffer } from "./offers";
 import { Product } from "./products";
 
 export type OrdersApiResponse = ApiResponse<Order>;

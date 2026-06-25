@@ -6,9 +6,8 @@ import ProductPrice, { PriceCode } from "./product-price";
 import { Badge } from "../ui/badge";
 import { ProductsActions } from "./products-actions";
 
-export function createProductsColumns(onEdit: (product: Product) => void): Column<Product>[] {
-  return [
-    {
+export const  ProductsColumns : Column<Product>[]= 
+[   {
       key: "name",
       label: "اسم المنتج",
       className: "text-right",
@@ -33,7 +32,7 @@ export function createProductsColumns(onEdit: (product: Product) => void): Colum
     },
     {
       key: "customerPrice",
-      label: "سعر الزبون",
+      label: "سعر المستهلك",
       sortable: true,
       render: (item) => (
         <span className="tabular-nums flex items-center justify-center gap-1">
@@ -59,8 +58,8 @@ export function createProductsColumns(onEdit: (product: Product) => void): Colum
       key: "actions",
       label: "الإجراءات",
       render: (item) => (
-        <ProductsActions product={item} onEdit={() => onEdit(item)} />
+        <ProductsActions product={item}  />
       ),
     },
-  ];
-}
+  ]
+

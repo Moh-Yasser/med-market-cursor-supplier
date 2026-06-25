@@ -1,0 +1,34 @@
+import axios from "axios";
+import { AxiosApi, handleAxiosError } from "@/lib/api/nextBff.client";
+import type { SupplierApiResponse, SuppliersApiResponse } from "@/types/company";
+import type { SuppliersFilters } from "@/types/filters";
+import { createQueryString } from "@/lib/api/queryString";
+  
+const SUPPLIERS_ROUTE = "/api/supplier/suppliers";
+
+
+export async function getAllSuppliers(
+  filters?: SuppliersFilters,
+): Promise<SuppliersApiResponse> {
+  try {
+    const queryString = createQueryString(filters);
+    console.log("string is here", queryString)
+    const url = queryString ? `${SUPPLIERS_ROUTE}?${queryString}` : SUPPLIERS_ROUTE;
+
+    const response = await AxiosApi.get<SuppliersApiResponse>(url);
+    console.log(response)
+    return response.data;
+  } catch (error) {
+  handleAxiosError(error);
+  }
+}
+
+export async function getSupplier(id: string): Promise<SupplierApiResponse> {
+  try {
+    const response = await AxiosApi.get<SupplierApiResponse>(`${SUPPLIERS_ROUTE}/${id}`);
+    return response.data;
+  } catch (error) {
+  handleAxiosError(error);
+  }
+}
+

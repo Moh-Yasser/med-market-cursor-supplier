@@ -1,5 +1,5 @@
 import { Company } from "./company";
-import {  ProductOffer } from "./offer";
+import {  ProductOffer } from "./offers";
 import { ApiResponse } from "./api-response";
 export interface category{
     id:number,
@@ -25,6 +25,8 @@ export interface manufacturer{
     createdAt:Date,
     updatedAt:Date,
 }
+
+
 export interface Product {
     id: number ;
     name: string;
@@ -32,6 +34,8 @@ export interface Product {
     sku: string;
     barcode: string;
     unit: string;
+    wholesale_min_qty:number | null,
+    wholesale_price:number | null
     pharmacistPrice: number;
     customerPrice: number,
     stockQuantity: number;
@@ -50,3 +54,7 @@ export interface Product {
 
 export type ProductsApiResponse = ApiResponse<Product>;
 
+export interface ProductDetailResponse {
+    success: boolean;
+    data: Product
+  } 

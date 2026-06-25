@@ -64,7 +64,6 @@ export function OfferDetailsFields({ form }: OfferDetailsFieldsProps) {
           </FormItem>
         )}
       />
-
       <FormField
         control={form.control}
         name="offer_type"
